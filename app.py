@@ -19,7 +19,7 @@ import tensorflow as tf
 tf.logging.set_verbosity(tf.logging.ERROR)
 
 MODEL_PATH = 'model/'
-model_name = 'markov'
+model_name = 'simple'
 model_file = f'{model_name}.model.json'
 weights_file = f'{model_name}.weights.h5'
 
@@ -62,11 +62,11 @@ def hello():
 def predict():
     try:
         comment = request.json['comment']
-        print('[INFO] Received request \'%s\'' % comment)
-
+        print('[INFO] Received comment \'%s\'' % comment)
+        
         # Tokenize the user's query and make a prediction
         with graph.as_default():
-            prediction = loaded_model.predict([prepare_comment(comment)], batch_size=1024)
+            prediction = loaded_model.predict([prepare_comment([comment])], batch_size=1024)
 
         output = {}
         i = 0
