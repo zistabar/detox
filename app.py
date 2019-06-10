@@ -1,3 +1,8 @@
+# Color cmd output
+from colorama import init
+init()
+from termcolor import colored
+
 # Ignore all warnings
 import warnings
 warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -33,7 +38,7 @@ def load_json_wih_weights_to_model():
     loaded_model = model_from_json(loaded_model_json)
     loaded_model.load_weights(f'{MODEL_PATH}{model_name}/{weights_file}')
 	
-    print('[INFO] Loaded \'%s\' model with weights from disk' % model_name)
+    print(colored('[INFO] Loaded \'%s\' model with weights from disk' % model_name, 'yellow'))
     
     global graph
     graph = tf.get_default_graph()
@@ -42,7 +47,7 @@ def load_json_wih_weights_to_model():
 	
 with open(f'{MODEL_PATH}tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
-    print('[INFO] Loaded Tokenizer from disk')	
+    print(colored('[INFO] Loaded Tokenizer from disk', 'yellow'))	
 
 classes_names = ['toxic', 'severe_toxic', 'obscene', 'threat', 'insult', 'identity_hate']
 	
@@ -62,7 +67,7 @@ def hello():
 def predict():
     try:
         comment = request.json['comment']
-        print('[INFO] Received comment \'%s\'' % comment)
+        print(colored('[INFO] Received comment \'%s\'' % comment, 'yellow'))
         
         # Tokenize the user's query and make a prediction
         with graph.as_default():
@@ -70,11 +75,21 @@ def predict():
 
         output = {}
         i = 0
+        is_toxic = False
         # Assign scores to classes
         for label in classes_names:
+            result = prediction[0][i]
+            if result > 0.5:
+                is_toxic = True
             output[label] = '{0:.2f}'.format(prediction[0][i])
             i += 1
-            
+        
+        print(colored('Results:', 'cyan'))
+        print(colored(output, 'cyan'))
+        if is_toxic:
+            print(colored('This comment seems to be toxic!', 'magenta'))
+        else:
+            print(colored('This comment seems to be harmless!', 'green'))
         return jsonify(output)
         
     except:
