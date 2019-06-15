@@ -1,0 +1,6 @@
+colorama
+termcolor
+flask
+numpy
+keras
+tensorflow
