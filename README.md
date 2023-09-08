@@ -15,8 +15,10 @@ To run the container locally, run the following command:
 
 An example request that the created REST API can take to predict a comment looks as follows:
 
-<code>curl --location --request POST 'http://detox-comments.azurewebsites.net/detox/api/comment' \
+```
+curl --location --request POST 'http://detox-comments.azurewebsites.net/detox/api/comment' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "comment": "Foo bar"
-}'</code>
+}'
+```
